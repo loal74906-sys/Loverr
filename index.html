@@ -3,41 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine's Day Proposal</title>
+    <title>For You | Valentine 2026</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9e6e6;
+        :root {
+            --accent: #ff5e78;
+            --dark: #1a1a2e;
+            --glass: rgba(255, 255, 255, 0.96);
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: radial-gradient(circle at center, #2d1b33 0%, #0f0f1a 100%);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        #proposal-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            width: 350px;
+            padding: 35px 25px;
+            border-radius: 40px;
             text-align: center;
-            padding: 50px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
         }
-        h1 {
-            color: #ff5e5e;
+
+        .screen { display: none; }
+        .active { display: block; animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        @keyframes reveal {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        button {
-            background-color: #ff5e5e;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 5px;
+
+        .img-frame {
+            width: 100%;
+            height: 230px;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        button:hover {
-            background-color: #ff3a3a;
+
+        .img-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        h2 { font-size: 1.6rem; color: #333; margin-bottom: 25px; font-weight: 800; letter-spacing: -0.5px; }
+
+        .actions { display: flex; justify-content: center; gap: 20px; height: 55px; position: relative; }
+
+        .btn {
+            padding: 0 35px; height: 55px; border-radius: 20px; border: none;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+
+        .btn-yes { background: var(--accent); color: white; box-shadow: 0 10px 20px rgba(255, 94, 120, 0.3); }
+        .btn-yes:hover { transform: scale(1.05); }
+
+        .btn-no { background: #f0f0f5; color: #999; }
+
+        .gift-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+
+        .gift-circle {
+            background: #fff; width: 85px; height: 85px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gift-circle:hover { transform: scale(1.15) rotate(10deg); background: #fff0f3; }
+
+        .back { display: inline-block; margin-top: 25px; color: var(--accent); font-weight: 700; cursor: pointer; }
+
+        .letter {
+            text-align: left; padding: 20px; background: #fff0f3;
+            border-radius: 20px; border-left: 5px solid var(--accent);
+            font-style: italic; color: #444; line-height: 1.6;
         }
     </style>
 </head>
 <body>
-    <h1>Will You Be My Valentine?</h1>
-    <p>Click the button below to see a surprise!</p>
-    <button onclick="revealProposal()">Reveal</button>
-    <p id="proposal" style="display: none; font-size: 24px; margin-top: 20px;"></p>
+
+    <div id="proposal-card">
+        <div id="s1" class="screen active">
+            <div class="img-frame">
+                <img src="https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&w=800&q=80" alt="Cute Hearts">
+            </div>
+            <h2>Will you be my Valentine?</h2>
+            <div class="actions">
+                <button class="btn btn-yes" onclick="nav(2)">Yes</button>
+                <button class="btn btn-no" id="no-btn" onmouseover="dodge()">No</button>
+            </div>
+        </div>
+
+        <div id="s2" class="screen">
+            <div class="img-frame">
+                <img src="https://images.unsplash.com/photo-1544911845-1f34a3eb46b1?auto=format&fit=crop&w=800&q=80" alt="Cozy Celebration">
+            </div>
+            <h2>Yay! You're stuck with me now. <br>Pick a gift:</h2>
+            <div class="gift-grid">
+                <div class="gift-circle" onclick="reveal('music')">🎧</div>
+                <div class="gift-circle" onclick="reveal('flower')">🌹</div>
+                <div class="gift-circle" onclick="reveal('letter')">💌</div>
+            </div>
+        </div>
+
+        <div id="s3" class="screen">
+            <div id="result"></div>
+            <a class="back" onclick="nav(2)">← Choose something else</a>
+        </div>
+    </div>
+
     <script>
-        function revealProposal() {
-            document.getElementById('proposal').innerText = 'I love you more than anything in this world! Will you marry me? ❤️';
-            document.getElementById('proposal').style.display = 'block';
+        function nav(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + num).classList.add('active');
         }
+
+        function dodge() {
+            const btn = document.getElementById('no-btn');
+            const card = document.getElementById('proposal-card');
+            btn.style.position = 'absolute';
+            btn.innerText = "Nice try!";
+            const maxX = card.clientWidth - btn.clientWidth - 40;
+            const maxY = card.clientHeight - btn.clientHeight - 40;
+            const rx = Math.floor(Math.random() * maxX);
+            const ry = Math.floor(Math.random() * maxY);
+            btn.style.left = rx + 'px';
+            btn.style.top = ry + 'px';
+        }
+
+        function reveal(choice) {
+            const box = document.getElementById('result');
+            let content = '';
+
+            if(choice === 'music') {
+                content = `
+                    <div class="img-frame"><img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=800&q=80"></div>
+                    <p><strong>Birds of a Feather</strong></p>
+                    <p style="color:#666; font-size:0.9rem;">"I'll love you 'til I'm in the grave..."</p>
+                `;
+            } else if(choice === 'flower') {
+                content = `
+                    <div class="img-frame"><img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=800&q=80"></div>
+                    <h3 style="color:#ff5e78;">A virtual bouquet for you. 🌹</h3>
+                `;
+            } else {
+                content = `
+                    <div class="letter">
+                        "In your eyes, I have found a home where my soul finally feels at rest. 
+                        You are the melody that my heart beats to and the light that guides me."
+                    </div>
+                `;
+            }
+            box.innerHTML = content;
+            nav(3);
+        }
+
+        // Heart mouse trail
+        document.addEventListener('mousemove', function(e) {
+            if (Math.random() > 0.92) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                heart.style.fontSize = '12px';
+                heart.style.pointerEvents = 'none';
+                heart.style.transition = 'all 1s ease-out';
+                document.body.appendChild(heart);
+                setTimeout(() => {
+                    heart.style.transform = `translateY(-40px)`;
+                    heart.style.opacity = '0';
+                }, 10);
+                setTimeout(() => heart.remove(), 1000);
+            }
+        });
     </script>
 </body>
 </html>
