@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day Proposal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9e6e6;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #ff5e5e;
+        }
+        button {
+            background-color: #ff5e5e;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #ff3a3a;
+        }
+    </style>
+</head>
+<body>
+    <h1>Will You Be My Valentine?</h1>
+    <p>Click the button below to see a surprise!</p>
+    <button onclick="revealProposal()">Reveal</button>
+    <p id="proposal" style="display: none; font-size: 24px; margin-top: 20px;"></p>
+    <script>
+        function revealProposal() {
+            document.getElementById('proposal').innerText = 'I love you more than anything in this world! Will you marry me? ❤️';
+            document.getElementById('proposal').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
